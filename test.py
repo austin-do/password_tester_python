@@ -1,5 +1,6 @@
 from tkinter import *
 import time
+import random
 
 def Show_Passwords(passwords):
     global roots
@@ -53,7 +54,7 @@ def Confirm():
     checkbtn = Button(rootA, text='Ready', command=CheckLogin)
     checkbtn.grid(column=2,columnspan=2, sticky=E)
 
-    showpassbtn = Button(rootA, text='Show Passwords', fg='red', command=Show) # This makes the deluser button. blah go to the deluser def.
+    showpassbtn = Button(rootA, text='Show Passwords', fg='red', command=Show)
     showpassbtn.grid(column=2,columnspan=2, sticky=E)
     roots.destroy()
     rootA.mainloop()
@@ -64,7 +65,7 @@ def CheckLogin():
         r = Tk()
         r.title(':D')
 
-        r.geometry('150x50')
+        r.geometry('150x100')
         rlbl = Label(r, text='\n Good Job.')
         rlbl.grid(row=1,column=1)
         continuebtn = Button(r, text="Continue", command=Test)
@@ -73,8 +74,8 @@ def CheckLogin():
     else:
         r = Tk()
         r.title('D:')
-        r.geometry('150x50')
-        rlbl = Label(r, text='\n[!] Invalid Login')
+        r.geometry('150x100')
+        rlbl = Label(r, text='\n[!] Invalid Password Detected.')
         rlbl.pack()
         r.mainloop()
 
@@ -82,52 +83,133 @@ def Test():
     #r.destroy()
     #rootA.destroy()
     order = RandomizeOrder()
-
     for i in order:
-        print("start:")
-        print(time.strftime('%H:%M:%S'))
+        t1 = time.strftime('%H:%M:%S')
         options[i]()
-        print("end:")
-        print(time.strftime('%H:%M:%S'))
+        t2 = time.strftime('%H:%M:%S')
+        #print(t2-t1)
 
 
 def TestEmail():
     global root
+    global email_pass_attempt
+    global failcount
+    failcount = 0
     root = Tk()
     email_pass = Label(root, text='Email: ')
     email_pass_attempt = Entry(root, show='*')
     email_pass.grid(row=1, sticky=W)
     email_pass_attempt.grid(row=1, column=1)
-    continuebtn = Button(root, text="Continue", command=Quit)
+    continuebtn = Button(root, text="Continue", command=CheckEmail)
     continuebtn.grid(column=2,row=2, sticky=E)
     root.mainloop()
 
-def BankEmail():
+def TestBank():
     global root
+    global bank_pass_attempt
+    global failcount
+    failcount = 0
     root = Tk()
     bank_pass = Label(root, text='Banking: ')
     bank_pass_attempt = Entry(root, show='*')
     bank_pass.grid(row=1, sticky=W)
     bank_pass_attempt.grid(row=1, column=1)
-    continuebtn = Button(root, text="Continue", command=Quit)
+    continuebtn = Button(root, text="Continue", command=CheckBank)
     continuebtn.grid(column=2,row=2, sticky=E)
     root.mainloop()
 
-def ShopEmail():
+def TestShop():
     global root
+    global shop_pass_attempt
+    global failcount
+    failcount = 0
     root = Tk()
     shop_pass = Label(root, text='Shopping: ')
     shop_pass_attempt = Entry(root, show='*')
     shop_pass.grid(row=1, sticky=W)
     shop_pass_attempt.grid(row=1, column=1)
-    continuebtn = Button(root, text="Continue", command=Quit)
+    continuebtn = Button(root, text="Continue", command=CheckShop)
     continuebtn.grid(column=2,row=2, sticky=E)
     root.mainloop()
+
+def CheckEmail():
+    global r
+    if email_pass_attempt.get() == passwords[0]:
+        Quit()
+    else:
+        global failcount
+        failcount = failcount + 1
+        if failcount == 3:
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\nYou have FAILED.')
+            rlbl.pack()
+            r.mainloop()
+            Restart()
+
+        else:
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\n[!] Invalid Password: ' + str(3-failcount) + ' Attempt(s) Remaining')
+            rlbl.pack()
+            r.mainloop()
+
+def CheckBank():
+    global r
+    if bank_pass_attempt.get() == passwords[1]:
+        Quit()
+    else:
+        global failcount
+        failcount = failcount + 1
+        if failcount == 3:
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\nYou have FAILED.')
+            rlbl.pack()
+            r.mainloop()
+            Restart()
+
+        else:
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\n[!] Invalid Password: ' + str(3-failcount) + ' Attempt(s) Remaining')
+            rlbl.pack()
+            r.mainloop()
+
+def CheckShop():
+    global r
+    if shop_pass_attempt.get() == passwords[2]:
+        Quit()
+    else:
+        global failcount
+        failcount = failcount + 1
+        if failcount > 2:
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\nYou have FAILED.')
+            rlbl.pack()
+            r.mainloop()
+            Restart()
+
+        else:
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\n[!] Invalid Password: ' + str(3-failcount) + ' Attempt(s) Remaining')
+            rlbl.pack()
+            r.mainloop()
 
 def RandomizeOrder():
     i = 0
     arr = [1,2,3]
+    random.shuffle(arr)
     return arr
+
 
 def Show():
     Show_Passwords(passwords)
@@ -138,15 +220,24 @@ def Destroy_Roots():
 def Quit():
     root.destroy()
 
+def Restart():
+    root.destroy()
+    root.update()
+    Main()
+
 def Generate_Passwords():
     global passwords
     passwords = ["god", "fucking", "damn it"]
 
 
 options = {1 : TestEmail,
-                  2 : BankEmail,
-                  3 : ShopEmail
+                  2 : TestBank,
+                  3 : TestShop
 }
-#Generate_Passwords()
-#Show_Passwords(passwords)
-Test()
+
+def Main():
+    Generate_Passwords()
+    #Show_Passwords(passwords)
+    Test()
+
+Main()
