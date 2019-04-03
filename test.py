@@ -85,8 +85,9 @@ def Test():
     order = RandomizeOrder()
     for i in order:
         t1 = time.strftime('%H:%M:%S')
+        print("START: " + str(t1))
         options[i]()
-        t2 = time.strftime('%H:%M:%S')
+
         #print(t2-t1)
 
 
@@ -135,54 +136,8 @@ def TestShop():
 def CheckEmail():
     global r
     if email_pass_attempt.get() == passwords[0]:
-        Quit()
-    else:
-        global failcount
-        failcount = failcount + 1
-        if failcount == 3:
-            r = Tk()
-            r.title('D:')
-            r.geometry('400x50')
-            rlbl = Label(r, text='\nYou have FAILED.')
-            rlbl.pack()
-            r.mainloop()
-            Restart()
-
-        else:
-            r = Tk()
-            r.title('D:')
-            r.geometry('400x50')
-            rlbl = Label(r, text='\n[!] Invalid Password: ' + str(3-failcount) + ' Attempt(s) Remaining')
-            rlbl.pack()
-            r.mainloop()
-
-def CheckBank():
-    global r
-    if bank_pass_attempt.get() == passwords[1]:
-        Quit()
-    else:
-        global failcount
-        failcount = failcount + 1
-        if failcount == 3:
-            r = Tk()
-            r.title('D:')
-            r.geometry('400x50')
-            rlbl = Label(r, text='\nYou have FAILED.')
-            rlbl.pack()
-            r.mainloop()
-            Restart()
-
-        else:
-            r = Tk()
-            r.title('D:')
-            r.geometry('400x50')
-            rlbl = Label(r, text='\n[!] Invalid Password: ' + str(3-failcount) + ' Attempt(s) Remaining')
-            rlbl.pack()
-            r.mainloop()
-
-def CheckShop():
-    global r
-    if shop_pass_attempt.get() == passwords[2]:
+        t2 = time.strftime('%H:%M:%S')
+        print("END(success): " + str(t2))
         Quit()
     else:
         global failcount
@@ -197,6 +152,66 @@ def CheckShop():
             Restart()
 
         else:
+            t2 = time.strftime('%H:%M:%S')
+            print("END(fail): " + str(t2))
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\n[!] Invalid Password: ' + str(3-failcount) + ' Attempt(s) Remaining')
+            rlbl.pack()
+            r.mainloop()
+
+def CheckBank():
+    global r
+    if bank_pass_attempt.get() == passwords[1]:
+        t2 = time.strftime('%H:%M:%S')
+        print("END(success): " + str(t2))
+        Quit()
+    else:
+        global failcount
+        failcount = failcount + 1
+        if failcount >2:
+            t2 = time.strftime('%H:%M:%S')
+            print("END(fail): " + str(t2))
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\nYou have FAILED.')
+            rlbl.pack()
+            r.mainloop()
+            Restart()
+
+        else:
+            t2 = time.strftime('%H:%M:%S')
+            print("END(fail): " + str(t2))
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\n[!] Invalid Password: ' + str(3-failcount) + ' Attempt(s) Remaining')
+            rlbl.pack()
+            r.mainloop()
+
+def CheckShop():
+    global r
+    if shop_pass_attempt.get() == passwords[2]:
+        t2 = time.strftime('%H:%M:%S')
+        print("END(success): " + str(t2))
+        Quit()
+    else:
+        global failcount
+        failcount = failcount + 1
+        if failcount > 2:
+            r = Tk()
+            r.title('D:')
+            r.geometry('400x50')
+            rlbl = Label(r, text='\nYou have FAILED.')
+            rlbl.pack()
+            r.mainloop()
+            Restart()
+
+        else:
+            t2 = time.strftime('%H:%M:%S')
+            print("END(fail): " + str(t2))
             r = Tk()
             r.title('D:')
             r.geometry('400x50')
@@ -226,6 +241,8 @@ def Restart():
     Main()
 
 def Generate_Passwords():
+    ###############################################################
+    #Hardcoded passwords until algorithm implemented
     global passwords
     passwords = ["god", "fucking", "damn it"]
 
@@ -237,6 +254,8 @@ options = {1 : TestEmail,
 
 def Main():
     Generate_Passwords()
+    ###############################################################
+    #uncomment this to show the first part
     #Show_Passwords(passwords)
     Test()
 
