@@ -62,9 +62,9 @@ def Confirm():
     bank_pass.grid(row=2, sticky=W)
     shop_pass.grid(row=3, sticky=W)
 
-    email_pass_attempt = Entry(rootA, show='*')
-    bank_pass_attempt = Entry(rootA, show='*')
-    shop_pass_attempt = Entry(rootA, show='*')
+    email_pass_attempt = Entry(rootA)
+    bank_pass_attempt = Entry(rootA)
+    shop_pass_attempt = Entry(rootA)
     email_pass_attempt.grid(row=1, column=1)
     bank_pass_attempt.grid(row=2, column=1)
     shop_pass_attempt.grid(row=3,column=1)
@@ -117,7 +117,7 @@ def TestEmail():
     failcount = 0
     root = Tk()
     email_pass = Label(root, text='Email: ')
-    email_pass_attempt = Entry(root, show='*')
+    email_pass_attempt = Entry(root)
     email_pass.grid(row=1, sticky=W)
     email_pass_attempt.grid(row=1, column=1)
     continuebtn = Button(root, text="Continue", command=CheckEmail)
@@ -131,7 +131,7 @@ def TestBank():
     failcount = 0
     root = Tk()
     bank_pass = Label(root, text='Banking: ')
-    bank_pass_attempt = Entry(root, show='*')
+    bank_pass_attempt = Entry(root)
     bank_pass.grid(row=1, sticky=W)
     bank_pass_attempt.grid(row=1, column=1)
     continuebtn = Button(root, text="Continue", command=CheckBank)
@@ -145,7 +145,7 @@ def TestShop():
     failcount = 0
     root = Tk()
     shop_pass = Label(root, text='Shopping: ')
-    shop_pass_attempt = Entry(root, show='*')
+    shop_pass_attempt = Entry(root)
     shop_pass.grid(row=1, sticky=W)
     shop_pass_attempt.grid(row=1, column=1)
     continuebtn = Button(root, text="Continue", command=CheckShop)
@@ -281,9 +281,12 @@ def Generate_Passwords():
     ###############################################################
     #Hardcoded passwords until algorithm implemented
     upperCase = "ABCDEFGHIJKLOPQRSTUVWXYZ"
-    lowerCase = "abcdefghijklopqrstuvwxyz"
+    lowerCase = []
+    for i in range (0,26):
+        lowerCase.append(str(i))
     symbols = "!@#$&*"
-    numbers = "1234567890"
+    colours = ["red", "blue", "green", "grey", "black", "pink"]
+    numbers = ["rhino", "cat", "dog", "rat", "fish", "cow", "horse", "goat", "shark", "zebra"]
     finalPass = []
     hold = []
 
@@ -296,9 +299,13 @@ def Generate_Passwords():
             for k in range(0,7):
                 c.append(random.choice(lowerCase))
 
-        if(i>1 and i<4):
+        if(i==2):
             for x in range(0,7):
                 c.append(random.choice(symbols))
+
+        if(i==3):
+            for x in range(0,7):
+                c.append(random.choice(colours))
 
         if(i>3):
             for y in range(0,7):
@@ -337,6 +344,6 @@ def csvWriter(logVal):
     with open('logs.csv', 'a') as csvFile:
         writer = csv.writer(csvFile)
         writer.writerow(logVal)
-    csvFile.close()
+        csvFile.close()
 
 SignUp()

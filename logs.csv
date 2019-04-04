@@ -3,3 +3,11 @@ austin,0:00:04.239668,success,email
 austin,0:00:05.207969,failure,shop
 austin,0:00:20.081416,success,shop
 austin,0:00:05.035461,success,bank
+asgfe,0:00:06.312171,failure,bank
+asgfe,0:00:08.752830,success,bank
+asgfe,0:00:05.184134,success,email
+asgfe,0:00:04.278534,success,shop
+sdg,0:00:09.247669,success,email
+sdg,0:00:10.843954,success,shop
+sdg,0:00:16.810885,failure,bank
+sdg,0:00:21.959771,success,bank
