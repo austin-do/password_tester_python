@@ -1,6 +1,24 @@
 from tkinter import *
 import time
 import random
+import datetime
+import csv
+
+def SignUp():
+    global rootyroot
+    global userID
+
+    rootyroot = Tk()
+    rootyroot.title('Sign Up')
+    ID = Label(rootyroot, text='Enter Your ID: ')
+    ID.grid(row=1, sticky=W)
+    userID = Entry(rootyroot)
+    userID.grid(row=1, column=1)
+
+    btnbtn = Button(rootyroot, text='Ready', command=Main)
+    btnbtn.grid(row=2,column=2,columnspan=2, sticky=E)
+
+    rootyroot.mainloop()
 
 def Show_Passwords(passwords):
     global roots
@@ -80,15 +98,16 @@ def CheckLogin():
         r.mainloop()
 
 def Test():
-    #r.destroy()
-    #rootA.destroy()
+    r.destroy()
+    rootA.destroy()
     order = RandomizeOrder()
+    global uID
+    uID = userID.get()
+    rootyroot.destroy()
+    global t1
     for i in order:
-        t1 = time.strftime('%H:%M:%S')
-        print("START: " + str(t1))
+        t1 = datetime.datetime.now()
         options[i]()
-
-        #print(t2-t1)
 
 
 def TestEmail():
@@ -135,9 +154,12 @@ def TestShop():
 
 def CheckEmail():
     global r
+    timer = 0
     if email_pass_attempt.get() == passwords[0]:
-        t2 = time.strftime('%H:%M:%S')
-        print("END(success): " + str(t2))
+        t2 = datetime.datetime.now()
+        timer = t2 - t1
+        log = [uID,timer,"success","email"]
+        csvWriter(log)
         Quit()
     else:
         global failcount
@@ -152,8 +174,10 @@ def CheckEmail():
             Restart()
 
         else:
-            t2 = time.strftime('%H:%M:%S')
-            print("END(fail): " + str(t2))
+            t2 = datetime.datetime.now()
+            timer = t2 - t1
+            log = [uID,timer,"failure","email"]
+            csvWriter(log)
             r = Tk()
             r.title('D:')
             r.geometry('400x50')
@@ -163,16 +187,17 @@ def CheckEmail():
 
 def CheckBank():
     global r
+    timer = 0
     if bank_pass_attempt.get() == passwords[1]:
-        t2 = time.strftime('%H:%M:%S')
-        print("END(success): " + str(t2))
+        t2 = datetime.datetime.now()
+        timer = t2 - t1
+        log = [uID,timer,"success","bank"]
+        csvWriter(log)
         Quit()
     else:
         global failcount
         failcount = failcount + 1
         if failcount >2:
-            t2 = time.strftime('%H:%M:%S')
-            print("END(fail): " + str(t2))
             r = Tk()
             r.title('D:')
             r.geometry('400x50')
@@ -182,8 +207,10 @@ def CheckBank():
             Restart()
 
         else:
-            t2 = time.strftime('%H:%M:%S')
-            print("END(fail): " + str(t2))
+            t2 = datetime.datetime.now()
+            timer = t2 - t1
+            log = [uID,timer,"failure","bank"]
+            csvWriter(log)
             r = Tk()
             r.title('D:')
             r.geometry('400x50')
@@ -193,9 +220,12 @@ def CheckBank():
 
 def CheckShop():
     global r
+    timer = 0
     if shop_pass_attempt.get() == passwords[2]:
-        t2 = time.strftime('%H:%M:%S')
-        print("END(success): " + str(t2))
+        t2 = datetime.datetime.now()
+        timer = t2 - t1
+        log = [uID,timer,"success","shop"]
+        csvWriter(log)
         Quit()
     else:
         global failcount
@@ -210,8 +240,10 @@ def CheckShop():
             Restart()
 
         else:
-            t2 = time.strftime('%H:%M:%S')
-            print("END(fail): " + str(t2))
+            t2 = datetime.datetime.now()
+            timer = t2 - t1
+            log = [uID,timer,"failure","shop"]
+            csvWriter(log)
             r = Tk()
             r.title('D:')
             r.geometry('400x50')
@@ -232,6 +264,11 @@ def Show():
 def Destroy_Roots():
     roots.destroy()
 
+def Destroy():
+    global userID
+    userID = userID
+    rootyroot.destroy()
+
 def Quit():
     root.destroy()
 
@@ -243,8 +280,41 @@ def Restart():
 def Generate_Passwords():
     ###############################################################
     #Hardcoded passwords until algorithm implemented
-    global passwords
-    passwords = ["god", "fucking", "damn it"]
+    upperCase = "ABCDEFGHIJKLOPQRSTUVWXYZ"
+    lowerCase = "abcdefghijklopqrstuvwxyz"
+    symbols = "!@#$&*"
+    numbers = "1234567890"
+    finalPass = []
+    hold = []
+
+    for i in range(0,5):
+        c=[]
+        if(i==0):
+            for j in range(0,7):
+                c.append(random.choice(upperCase))
+        if(i==1):
+            for k in range(0,7):
+                c.append(random.choice(lowerCase))
+
+        if(i>1 and i<4):
+            for x in range(0,7):
+                c.append(random.choice(symbols))
+
+        if(i>3):
+            for y in range(0,7):
+                c.append(random.choice(numbers))
+
+        hold = Generate_Passwords_Helper(c)
+        finalPass = finalPass + hold;
+
+    finalPass = ''.join(finalPass)
+    passwords.append(finalPass)
+
+
+def Generate_Passwords_Helper(c):
+    ret = []
+    ret.append(random.choice(c))
+    return(ret)
 
 
 options = {1 : TestEmail,
@@ -252,11 +322,21 @@ options = {1 : TestEmail,
                   3 : TestShop
 }
 
+
 def Main():
-    Generate_Passwords()
+    global passwords
+    passwords = []
+    for i in range (0,3):
+        Generate_Passwords()
     ###############################################################
     #uncomment this to show the first part
-    #Show_Passwords(passwords)
+    Show_Passwords(passwords)
     Test()
 
-Main()
+def csvWriter(logVal):
+    with open('logs.csv', 'a') as csvFile:
+        writer = csv.writer(csvFile)
+        writer.writerow(logVal)
+    csvFile.close()
+
+SignUp()
